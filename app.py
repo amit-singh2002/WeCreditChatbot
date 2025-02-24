@@ -8,14 +8,13 @@ st.write("Ask me about loans, credit reports, interest rates, CIBIL scores, and 
 
 # OpenAI API Key Setup
 if "OPENAI_API_KEY" in st.secrets:
-    openai.api_key = st.secrets["export OPENAI_API_KEY=your_api_key_here
-"]
-elif os.getenv("export OPENAI_API_KEY=your_api_key_here
-"):
-    openai.api_key = os.getenv("export OPENAI_API_KEY=your_api_key_here
-")
+    openai.api_key = st.secrets["OPENAI_API_KEY"]
+elif os.getenv("OPENAI_API_KEY"):
+    openai.api_key = os.getenv("OPENAI_API_KEY")
 else:
-    st.error("🚨 OpenAI API Key not found! Please add it to Streamlit secrets or set it as an environment variable.")
+    st.error("
+    set OPENAI_API_KEY=your_api_key_here
+")
 
 # User Input
 user_input = st.text_input("You:", "Type your financial question here...")
