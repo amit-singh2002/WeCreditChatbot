@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 import openai
+import os
 
 app = Flask(__name__)
 
 # Set your OpenAI API key
-openai.api_key = 'YOUR_OPENAI_API_KEY'
+openai.api_key = os.getenv('OPENAI_API_KEY')  # Use environment variable for security
 
 @app.route('/chat', methods=['POST'])
 def chat():
