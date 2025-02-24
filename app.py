@@ -1,24 +1,26 @@
-from flask import Flask, request, jsonify
-import openai
-import os
+import streamlit as st
+import openai  # Or your preferred LLM library
 
-app = Flask(__name__)
+# Set your OpenAI API key (or equivalent) - SECURELY, ideally not directly in code
+openai.api_key = st.secrets["OPENAI_API_KEY"] # Best practice for API keys
 
-# Set your OpenAI API key
-openai.api_key = os.getenv('OPENAI_API_KEY')  # Use environment variable for security
+st.title("WeCredit Chatbot")
 
-@app.route('/chat', methods=['POST'])
-def chat():
-    user_message = request.json.get('message')
-    
-    # Call OpenAI's API to get a response
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": user_message}]
+# ... (Your chatbot logic here) ...
+
+def get_chatbot_response(user_input):
+    response = openai.Completion.create(
+        engine="text-davinci-003",  # Or your chosen LLM model
+        prompt=f"WeCredit Chatbot:\n{user_input}",
+        max_tokens=150,
     )
-    
-    bot_message = response['choices'][0]['message']['content']
-    return jsonify({"response": bot_message})
+    return response.choices[0].text.strip()
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+user_input = st.text_input("Ask a question about loans, credit, or interest rates:")
+
+if user_input:
+    response = get_chatbot_response(user_input)
+    st.write(response)
+
+# ... (Rest of your Streamlit app code) ...
