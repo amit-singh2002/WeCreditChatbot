@@ -12,9 +12,7 @@ if "OPENAI_API_KEY" in st.secrets:
 elif os.getenv("OPENAI_API_KEY"):
     openai.api_key = os.getenv("OPENAI_API_KEY")
 else:
-    st.error("
-    set OPENAI_API_KEY=your_api_key_here
-")
+    st.error("🚨 OpenAI API Key not found! Please add it to Streamlit secrets or set it as an environment variable.")
 
 # User Input
 user_input = st.text_input("You:", "Type your financial question here...")
