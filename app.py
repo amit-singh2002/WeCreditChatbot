@@ -41,7 +41,7 @@ def openai_response(user_query):
     Bot:
     """
     try:
-       response = openai.ChatCompletion.create(
+    response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",  # Or "gpt-4" if you have access
     messages=[{"role": "system", "content": "You are a helpful financial advisor chatbot for WeCredit."},
               {"role": "user", "content": user_query}],
@@ -49,7 +49,6 @@ def openai_response(user_query):
     temperature=0.5
 )
 
-        
         return response.choices[0].text.strip()
     except Exception as e:
         return f"Error: {str(e)}"
