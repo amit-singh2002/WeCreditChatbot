@@ -1,16 +1,10 @@
 import streamlit as st
-import openai  # Or your preferred LLM library
-
-# Set your OpenAI API key (or equivalent) - SECURELY, ideally not directly in code
-openai.api_key = st.secrets["OPENAI_API_KEY"] # Best practice for API keys
-
-st.title("WeCredit Chatbot")import streamlit as st
 import openai
 import os
 
 # Streamlit App Title
-st.title("WeCredit Dynamic FinTech Chatbot 💬")
-st.write("Ask me anything about loans, credit reports, interest rates, CIBIL scores, and more!")
+st.title("WeCredit FinTech Chatbot 💬")
+st.write("Ask me about loans, credit reports, interest rates, CIBIL scores, and more!")
 
 # OpenAI API Key Setup
 if "OPENAI_API_KEY" in st.secrets:
@@ -23,30 +17,29 @@ else:
 # User Input
 user_input = st.text_input("You:", "Type your financial question here...")
 
-# Dynamic Knowledge-Based and LLM Response
-def generate_response(user_query):
+# Knowledge Base Function
+def knowledge_base_response(query):
     knowledge_base = {
-        "loans": "Loans can be Personal, Home, Auto, Education, or Business. Eligibility depends on age (21–60), income stability, and credit score. Required documents: ID proof, address proof, income proof, and bank statements.",
+        "loans": "Loans include Personal, Home, Auto, Education, and Business Loans. Eligibility depends on age (21–60), income stability, credit score, and employment status. Documents: ID proof, address proof, income proof, and bank statements.",
         "interest rates": "Interest rates can be fixed or floating. Simple Interest = (P * R * T) / 100. Factors influencing rates include RBI policies, credit score, and market trends.",
         "credit bureaus": "Major Indian credit bureaus: CIBIL, Experian, Equifax, and CRIF High Mark. These agencies track credit history, affecting loan approvals.",
-        "credit reports": "Credit reports detail personal info, credit accounts, payment history, and public records. You can request one free report annually from official credit bureaus.",
+        "credit reports": "Credit reports show personal info, credit accounts, payment history, and public records. You can request one free report annually from official credit bureaus.",
         "cibil score": "CIBIL Score ranges from 300–900, with 750+ considered good. Factors include payment history (35%), credit utilization (30%), credit history length (15%), credit mix (10%), and new credit inquiries (10%)."
     }
-
-    # Check knowledge base first
     for key, value in knowledge_base.items():
-        if key in user_query.lower():
+        if key in query.lower():
             return value
+    return None
 
-    # Use OpenAI LLM if not in knowledge base
+# OpenAI LLM Response
+def openai_response(user_query):
     prompt = f"""
-    You are a professional financial advisor chatbot for WeCredit.
-    Answer the user's question with accurate financial information about loans, interest rates, credit bureaus, credit reports, and CIBIL scores.
+    You are a helpful financial advisor chatbot for WeCredit.
+    Answer the following query in detail about loans, interest rates, credit bureaus, credit reports, and CIBIL scores.
 
     User: {user_query}
     Bot:
     """
-
     try:
         response = openai.Completion.create(
             engine="text-davinci-003",
@@ -60,29 +53,13 @@ def generate_response(user_query):
 
 # Handle User Query
 if user_input:
-    response = generate_response(user_input)
-    st.write(f"**WeCredit Bot:** {response}")
+    kb_response = knowledge_base_response(user_input)
+    if kb_response:
+        st.write(f"**WeCredit Bot:** {kb_response}")
+    else:
+        ai_response = openai_response(user_input)
+        st.write(f"**WeCredit Bot:** {ai_response}")
 
 # Footer
 st.markdown("---")
 st.markdown("Created for WeCredit by Amit Kumar Singh")
-
-
-# ... (Your chatbot logic here) ...
-
-def get_chatbot_response(user_input):
-    response = openai.Completion.create(
-        engine="text-davinci-003",  # Or your chosen LLM model
-        prompt=f"WeCredit Chatbot:\n{user_input}",
-        max_tokens=150,
-    )
-    return response.choices[0].text.strip()
-
-
-user_input = st.text_input("Ask a question about loans, credit, or interest rates:")
-
-if user_input:
-    response = get_chatbot_response(user_input)
-    st.write(response)
-
-# ... (Rest of your Streamlit app code) ...
