@@ -49,7 +49,7 @@ def openai_response(user_query):
     temperature=0.5
 )
 
-        )
+        
         return response.choices[0].text.strip()
     except Exception as e:
         return f"Error: {str(e)}"
