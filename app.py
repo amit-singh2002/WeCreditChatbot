@@ -41,14 +41,12 @@ def openai_response(user_query):
     Bot:
     """
     try:
-    response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",  # Or "gpt-4" if you have access
-    messages=[{"role": "system", "content": "You are a helpful financial advisor chatbot for WeCredit."},
-              {"role": "user", "content": user_query}],
-    max_tokens=200,
-    temperature=0.5
-)
-
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=250,
+            temperature=0.5
+        )
         return response.choices[0].text.strip()
     except Exception as e:
         return f"Error: {str(e)}"
